@@ -1,10 +1,12 @@
 # Reproducible Research: Peer Assessment 1
 
-16.5.2014
+Last modified Fri May 16 14:00:27 2014`
 
 ## Loading and preprocessing the data
 
 Load the data from file and do the transformations
+
+Set the locale and read the csv file
 
 
 ```r
@@ -100,7 +102,7 @@ axis(1, at = 1:288, labels = names(r1))
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 
-Interval with maximum number of steps occurs at 0835
+Interval with maximum number of steps occurs at 0835 with value 206.1698
 
 
 ```r

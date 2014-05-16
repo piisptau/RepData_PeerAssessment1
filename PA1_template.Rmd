@@ -1,10 +1,12 @@
 # Reproducible Research: Peer Assessment 1
 
-16.5.2014
+Last modified `r date()``
 
 ## Loading and preprocessing the data
 
 Load the data from file and do the transformations
+
+Set the locale and read the csv file
 
 ```{r echo = TRUE}
 
@@ -61,7 +63,7 @@ axis(1, at=1:288, labels=names(r1))
 
 ```
 
-Interval with maximum number of steps occurs at 0835
+Interval with maximum number of steps occurs at 0835 with value `r r1[which.max(r1)] `
 
 ```{r echo=TRUE}
 r1[which.max(r1)]
