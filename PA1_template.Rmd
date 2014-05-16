@@ -1,5 +1,7 @@
 # Reproducible Research: Peer Assessment 1
 
+16.5.2014
+
 ## Loading and preprocessing the data
 
 Load the data from file and do the transformations
@@ -38,9 +40,9 @@ Mean and median total number of steps taken per day
 
 ```{r echo=TRUE}
 
-tapply(activity$steps, activity$interval, mean, na.rm=T)
+mean(tapply(activity$steps, activity$date, sum, na.rm=T))
 
-tapply(activity$steps, activity$interval, median, na.rm=T)
+median(tapply(activity$steps, activity$date, sum, na.rm=T))
 
 
 ```
@@ -59,7 +61,7 @@ axis(1, at=1:288, labels=names(r1))
 
 ```
 
-Interval with maximum number of steps occurs at 0835 
+Interval with maximum number of steps occurs at 0835
 
 ```{r echo=TRUE}
 r1[which.max(r1)]
@@ -69,10 +71,17 @@ r1[which.max(r1)]
 
 Missing steps values are replaced with the average number of steps for that intevrval. New value is placed in the column newsteps.
 
+Summary of activity data frame shows the number of missing values in steps column.
 
 ```{r echo=TRUE}
 
 summary(activity)
+
+```
+
+Replace missing values with average number of steps for that interval and create a new imputed data frame m2.
+
+```{r echo=TRUE}
 
 d1 =aggregate(steps ~ interval, data=activity, mean)
 
