@@ -1,20 +1,115 @@
 # Reproducible Research: Peer Assessment 1
 
-
 ## Loading and preprocessing the data
 
+Load the data from file and do the transformations
+
+```{r echo = TRUE}
+
+Sys.setlocale("LC_TIME", "English")
+
+activity  <- read.csv("C:/Users/piisptau/Downloads/activity.csv", sep=",", header=T, stringsAsFactors=F)
+
+````
+
+Transform date and time fields
+
+```{r echo=TRUE}
+
+activity$acttime <- strptime(paste(activity$date, formatC(activity$interval, width = 4, format = "d", flag = "0") ), format='%Y-%m-%d %H%M')
+
+activity$date <- as.Date(activity$date, format="%Y-%m-%d")
+
+```
+
+##  What is mean total number of steps taken per day?
+
+Histogram of the total number of steps taken each day
+
+```{r echo=TRUE, fig.width=7, fig.height=6}
+
+hist(tapply(activity$steps, activity$date, sum), main="Total number of steps", xlab="Number of steps", ylab="Frequency")
+
+par(las=2)
+barplot(tapply(activity$steps, activity$date, sum))
+```
+
+Mean and median total number of steps taken per day
+
+```{r echo=TRUE}
+
+tapply(activity$steps, activity$interval, mean, na.rm=T)
+
+tapply(activity$steps, activity$interval, median, na.rm=T)
 
 
-## What is mean total number of steps taken per day?
-
-
+```
 
 ## What is the average daily activity pattern?
 
+Average number of steps taken
 
+```{r echo=TRUE}
+
+r1 =tapply(activity$steps, activity$interval, mean, na.rm=T)
+
+par(las=0)
+plot(r1, type="l", xaxt="n", ylab="Number of steps")
+axis(1, at=1:288, labels=names(r1))
+
+```
+
+Interval with maximum number of steps occurs at 0835 
+
+```{r echo=TRUE}
+r1[which.max(r1)]
+```
 
 ## Imputing missing values
 
+Missing steps values are replaced with the average number of steps for that intevrval. New value is placed in the column newsteps.
 
+
+```{r echo=TRUE}
+
+summary(activity)
+
+d1 =aggregate(steps ~ interval, data=activity, mean)
+
+colnames(d1) = c("interval", "avgsteps")
+
+m2 =merge(activity, d1, by.x="interval", by.y="interval")
+
+m2$newsteps = ifelse(is.na(m2$steps),m2$avgsteps, m2$steps)
+
+hist(tapply(m2$newsteps, m2$date, sum), main="Total number of steps", xlab="Number of steps", ylab="Frequency")
+
+```
+
+## Creating weekday factor variable
+
+Weekday factor variable has value "weekend" if weekday is Saturday or Sunday, otherwise the variable value is "weekday".
+
+```{r echo=TRUE}
+
+m2$wday = weekdays(m2$date)
+
+m2$weekend =m2$wday == "Saturday" | m2$wday=="Sunday"
+
+m2$wefactor = factor(m2$weekend, levels=c("FALSE","TRUE"), labels=c("weekday","weekend"))
+
+
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Average number of steps taken during 5-minute intervals during weekdays and weekend
+
+```{r echo=TRUE}
+
+library(lattice)
+po <- xyplot(avgsteps ~ interval|wefactor, data=m2, type="l")
+
+print(po)
+
+```
