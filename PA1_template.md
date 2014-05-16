@@ -117,7 +117,7 @@ r1[which.max(r1)]
 
 Missing steps values are replaced with the average number of steps for that intevrval. New value is placed in the column newsteps.
 
-Summary of activity data frame shows the number of missing values in steps column.
+Summary of activity data frame shows the number of missing values in steps column. There are 2304 rows with missing (NA) steps value.
 
 
 ```r
@@ -157,12 +157,44 @@ colnames(d1) = c("interval", "avgsteps")
 m2 = merge(activity, d1, by.x = "interval", by.y = "interval")
 
 m2$newsteps = ifelse(is.na(m2$steps), m2$avgsteps, m2$steps)
+```
+
+
+Produce a new histogram from the imputed data frame m2
+
+
+```r
 
 hist(tapply(m2$newsteps, m2$date, sum), main = "Total number of steps", xlab = "Number of steps", 
     ylab = "Frequency")
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
+
+
+Calculate new steps mean and median from the imputed data frame
+
+
+```r
+
+mean(tapply(m2$newsteps, m2$date, sum))
+```
+
+```
+## [1] 10766
+```
+
+```r
+
+median(tapply(m2$newsteps, m2$date, sum))
+```
+
+```
+## [1] 10766
+```
+
+
+Before imputing the steps mean was 9354 and median 10395. Now mean and median are equal.
 
 
 ## Creating weekday factor variable
@@ -195,5 +227,5 @@ po <- xyplot(avgsteps ~ interval | wefactor, data = m2, type = "l")
 print(po)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
 
